@@ -127,6 +127,48 @@ namespace network
         return HttpRequest::Method::MAX;
     }
 
+    std::string HttpRequest::toString(Method method)
+    {
+        if (method == HttpRequest::Method::GET)
+        {
+            return "GET";
+        }
+        else if (method == HttpRequest::Method::HEAD)
+        {
+            return "HEAD";
+        }
+        else if (method == HttpRequest::Method::POST)
+        {
+            return "POST";
+        }
+        else if (method == HttpRequest::Method::PUT)
+        {
+            return "PUT";
+        }
+        else if (method == HttpRequest::Method::Delete)
+        {
+            return "DELETE";
+        }
+        else if (method == HttpRequest::Method::CONNECT)
+        {
+            return "CONNECT";
+        }
+        else if (method == HttpRequest::Method::OPTIONS)
+        {
+            return "OPTIONS";
+        }
+        else if (method == HttpRequest::Method::TRACE)
+        {
+            return "TRACE";
+        }
+        else if (method == HttpRequest::Method::PATCH)
+        {
+            return "PATCH";
+        }
+
+        return "";
+    }
+
     std::string HttpRequest::getHeaderValue(std::string key)
     {
         auto it = headers.find(key);
@@ -137,6 +179,21 @@ namespace network
         }
 
         return "";
+    }
+
+    HttpRequest::Method HttpRequest::getMethod()
+    {
+        return method;
+    }
+
+    std::string HttpRequest::getPath()
+    {
+        return path;
+    }
+
+    std::string HttpRequest::getProtocolVersion()
+    {
+        return protocolVersion;
     }
 
 } // namespace network

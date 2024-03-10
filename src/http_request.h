@@ -37,6 +37,10 @@ namespace network
                                 std::string &protoclVersion,
                                 std::map<std::string, std::string> &headers);
         std::string getHeaderValue(std::string key);
+        Method getMethod();
+        std::string getPath();
+        std::string getProtocolVersion();
+        static std::string toString(Method method);
 
     private:
         Method method;

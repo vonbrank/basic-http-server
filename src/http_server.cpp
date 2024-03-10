@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <sstream>
 #include "http_request.h"
+#include "http_response.h"
+#include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 
 namespace network
 {
@@ -31,18 +34,32 @@ namespace network
             HttpRequest httpRequest = HttpRequest();
             if (readHttpRequest(handling_socket, httpRequest))
             {
-                std::string message = "Hello world";
+                auto httpResponse = HttpResponse();
 
-                std::ostringstream ss;
-                ss << "HTTP/1.1 200 OK\r\n"
-                   << "Content-Length: " << message.size() << "\r\n"
-                   << "\r\n"
-                   << message;
+                if (httpRequest.getMethod() == HttpRequest::Method::GET)
+                {
+                    std::string message = "Hello world";
+                    httpResponse = HttpResponse::make_text(HttpResponse::StatusCode::OK, message);
+                }
+                else if (httpRequest.getMethod() == HttpRequest::Method::OPTIONS)
+                {
+                    httpResponse = HttpResponse::make_allow_methods(HttpResponse::StatusCode::OK);
+                }
+                else
+                {
+                    httpResponse = HttpResponse::make_text(HttpResponse::StatusCode::InternalServerError, "");
+                }
 
-                std::string response_string = ss.str();
+                std::string response_string = httpResponse.encode();
                 send(handling_socket, response_string.c_str(), response_string.size(), 0);
+                auto contentLength = httpResponse.getHeaderValue("Content-Length");
+                utils::log((boost::format("%s %s %d - %s")
+                            % HttpRequest::toString(httpRequest.getMethod()).data()
+                            % httpRequest.getPath().data() % (int)httpResponse.getStatusCode()
+                            % (contentLength.size() ? contentLength : "-").data())
+                               .str());
 
-                if (httpRequest.getHeaderValue("Connection") == "Keep-Alive")
+                if (boost::algorithm::to_lower_copy(httpRequest.getHeaderValue("Connection")) == "keep-alive")
                 {
                     continue;
                 }
@@ -95,7 +112,8 @@ namespace network
 
             requestBody = readBytesFromSocket(handling_socket, content_length);
         }
-        // utils::log(requestBody);
+
+        outHttpRequest = HttpRequest::parse(header, requestBody);
 
         return true;
     }
@@ -117,7 +135,10 @@ namespace network
             }
             else if (bytesRead == 0)
             {
-                utils::log("Connection has been closed before finishing reading.");
+                if (totalBytesRead)
+                {
+                    utils::log("Connection has been closed before finishing reading.");
+                }
                 break;
             }
             totalBytesRead += bytesRead;
