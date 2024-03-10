@@ -9,7 +9,7 @@ class BasicHttpServerRecipe(ConanFile):
 
     # Optional metadata
     license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
+    author = "VonBrank vonbrank@outlook.com"
     url = "<Package recipe repository url here, for issues about the package>"
     description = "<Description of basic_http_server package here>"
     topics = ("<Put some tag here>", "<here>", "<and here>")
