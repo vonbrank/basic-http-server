@@ -25,17 +25,18 @@ namespace network
         };
 
     public:
-        HttpRequest(Method method,
-                    std::string path,
-                    std::string protocolVersion,
-                    std::map<std::string, std::string> headers,
-                    std::string body);
+        HttpRequest(Method method = Method::MAX,
+                    std::string path = "",
+                    std::string protocolVersion = "",
+                    std::map<std::string, std::string> headers = std::map<std::string, std::string>(),
+                    std::string body = "");
 
         static HttpRequest parse(std::string rawHeader, std::string rawBody = "");
         static bool parseHeader(std::string rawHeader, Method &method,
                                 std::string &path,
                                 std::string &protoclVersion,
                                 std::map<std::string, std::string> &headers);
+        std::string getHeaderValue(std::string key);
 
     private:
         Method method;

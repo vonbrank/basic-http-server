@@ -127,4 +127,16 @@ namespace network
         return HttpRequest::Method::MAX;
     }
 
+    std::string HttpRequest::getHeaderValue(std::string key)
+    {
+        auto it = headers.find(key);
+
+        if (it != headers.end())
+        {
+            return it->second;
+        }
+
+        return "";
+    }
+
 } // namespace network

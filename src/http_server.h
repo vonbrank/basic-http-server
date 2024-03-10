@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <string>
 #include "tcp_server.h"
+#include "http_request.h"
 
 namespace network
 {
@@ -20,7 +21,7 @@ namespace network
 
     private:
         void handleConnection(SOCKET &handling_socket) override;
-        void readHttpRequest(SOCKET &handling_socket);
+        bool readHttpRequest(SOCKET &handling_socket, HttpRequest &outHttpRequest);
         std::string readBytesFromSocket(SOCKET &handling_socket, size_t numBytes);
     };
 } // namespace network

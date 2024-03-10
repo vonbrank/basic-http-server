@@ -24,29 +24,53 @@ namespace network
     }
     void HttpServer::handleConnection(SOCKET &handling_socket)
     {
-        utils::log("[server] Handling connection...");
+        utils::log("[http-server] Handling connection...");
 
-        readHttpRequest(handling_socket);
+        while (true)
+        {
+            HttpRequest httpRequest = HttpRequest();
+            if (readHttpRequest(handling_socket, httpRequest))
+            {
+                std::string message = "Hello world";
 
-        std::string message = "Hello world";
+                std::ostringstream ss;
+                ss << "HTTP/1.1 200 OK\r\n"
+                   << "Content-Length: " << message.size() << "\r\n"
+                   << "\r\n"
+                   << message;
 
-        std::ostringstream ss;
-        ss << "HTTP/1.1 200 OK\r\n"
-           << "Content-Length: " << message.size() << "\r\n"
-           << "\r\n"
-           << message;
+                std::string response_string = ss.str();
+                send(handling_socket, response_string.c_str(), response_string.size(), 0);
 
-        std::string response_string = ss.str();
-        send(handling_socket, response_string.c_str(), response_string.size(), 0);
+                if (httpRequest.getHeaderValue("Connection") == "Keep-Alive")
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        utils::log("[http-server] Connection closed...");
     }
 
-    void HttpServer::readHttpRequest(SOCKET &handling_socket)
+    bool HttpServer::readHttpRequest(SOCKET &handling_socket, HttpRequest &outHttpRequest)
     {
         std::stringstream ss_header;
         std::string ch;
         while (true)
         {
             ch = readBytesFromSocket(handling_socket, 1);
+            if (ch.size() == 0)
+            {
+                return false;
+            }
             ss_header << ch;
             if (ss_header.str().find("\r\n\r\n") != std::string::npos)
             {
@@ -72,6 +96,8 @@ namespace network
             requestBody = readBytesFromSocket(handling_socket, content_length);
         }
         // utils::log(requestBody);
+
+        return true;
     }
 
     std::string HttpServer::readBytesFromSocket(SOCKET &handling_socket, size_t numBytes)
