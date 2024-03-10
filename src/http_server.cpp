@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <sstream>
+#include "http_request.h"
 
 namespace network
 {
@@ -52,21 +53,25 @@ namespace network
                 break;
             }
         }
+
         std::string header = ss_header.str();
-        ss_header.clear();
-        std::string contentLengthKey = "Content-Length: ";
-        size_t pos = header.find(contentLengthKey);
+
+        HttpRequest::Method method = HttpRequest::Method::MAX;
+        std::string path = "";
+        std::string protoclVersion = "";
+        std::map<std::string, std::string> headers;
+        network::HttpRequest::parseHeader(header, method, path, protoclVersion, headers);
+
         std::string requestBody = "";
-        if (pos != std::string::npos)
+        auto contentLengthIt = headers.find("Content-Length");
+        if (contentLengthIt != headers.end())
         {
-            pos += contentLengthKey.size();
-            size_t end_pos = header.find("\r\n", pos);
-            int content_length = std::stoi(header.substr(pos, end_pos - pos));
+            auto contentLengthString = contentLengthIt->second;
+            int content_length = std::stoi(contentLengthString);
 
             requestBody = readBytesFromSocket(handling_socket, content_length);
         }
-        utils::log(header);
-        utils::log(requestBody);
+        // utils::log(requestBody);
     }
 
     std::string HttpServer::readBytesFromSocket(SOCKET &handling_socket, size_t numBytes)

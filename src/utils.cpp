@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <winsock2.h>
+#include "utils.h"
 
 namespace utils
 {
