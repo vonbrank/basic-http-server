@@ -1,13 +1,10 @@
-#include "basic_http_server.h"
-#include <vector>
-#include <string>
+#include "http_server.h"
 
 int main()
 {
-    basic_http_server();
+    using namespace network;
+    HttpServer server = HttpServer("127.0.0.1", 5001);
+    server.run();
 
-    std::vector<std::string> vec;
-    vec.push_back("test_package");
-
-    basic_http_server_print_vector(vec);
+    return 0;
 }
