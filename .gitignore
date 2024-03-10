@@ -1,0 +1,71 @@
+**/conan-*
+**/cmake_install.cmake
+**/CMakeCache.txt
+**/compressor
+**/Makefile
+**/CMakeFiles
+**/cmake-build-*
+**/deactivate_conanbuildenv*
+
+.DS_Store
+.vscode/
+.cache/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Cache
+__pycache__/*
+build/*
+*.pyc
+tmp/
+
+# IDE
+.idea/*
+.project
+.pydevproject
+.settings/*
+.ropeproject/*
+
+.tox
+CMakeUserPresets.json
+**/generators/**
+**/build/**
+conanbuild*
+conanrun*
+deactivate_conanbuild*
+deactivate_conanrun*
+tutorial/versioning/revisions/intro/chat/*
+tutorial/versioning/revisions/intro/hello/*
+examples/libraries/tensorflow-lite/pose-estimation/pose-estimation
+examples/libraries/imgui/introduction/bindings
+
+# Bazel files
+bazel-*
