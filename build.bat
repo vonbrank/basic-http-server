@@ -4,7 +4,7 @@ set DCMAKE_TOOLCHAIN_FILE=.\generators\conan_toolchain.cmake
 
 if "%1"=="start" (
     cd .\build\Debug\
-    cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=%DCMAKE_TOOLCHAIN_FILE% -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=%DCMAKE_TOOLCHAIN_FILE% -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     cmake --build .
     .\basic_http_server.exe
 ) else if "%1"=="build" (
@@ -12,9 +12,9 @@ if "%1"=="start" (
     cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=%DCMAKE_TOOLCHAIN_FILE% -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     cmake --build .
 ) else if "%1"=="install-debug" (
-    conan install . --build=missing --profile=mingw64 --settings=build_type=Debug
+    conan install . --build=missing --profile=mingw64 --settings=build_type=Debug -o "boost/*:debug_level=1" -o "boost/*:without_stacktrace=True" -o "boost/*:without_url=True"
 ) else if "%1"=="install-release" (
-    conan install . --build=missing --profile=mingw64
+    conan install . --build=missing --profile=mingw64 -o "boost/*:debug_level=1" -o "boost/*:without_stacktrace=True" -o "boost/*:without_url=True"
 ) else if "%1"=="clean" (
     call :DeleteFileIfExists "CMakeUserPresets.json"
     call :DeleteFolderIfExists "build"
