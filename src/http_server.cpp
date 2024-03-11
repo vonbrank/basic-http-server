@@ -51,6 +51,7 @@ namespace network
                 }
 
                 std::string response_string = httpResponse.encode();
+                // utils::log(response_string);
                 send(handling_socket, response_string.c_str(), response_string.size(), 0);
                 auto contentLength = httpResponse.getHeaderValue("Content-Length");
                 utils::log((boost::format("%s %s %d - %s")

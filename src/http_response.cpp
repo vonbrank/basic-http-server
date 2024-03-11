@@ -17,10 +17,7 @@ namespace network
         headers(headers),
         body(body)
     {
-        if (body.size())
-        {
-            this->headers["Content-Length"] = (boost::format("%1%") % body.size()).str();
-        }
+        this->headers["Content-Length"] = (boost::format("%1%") % body.size()).str();
         this->headers["Access-Control-Allow-Origin"] = "*";
         this->headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Authorization";
     }
@@ -45,6 +42,11 @@ namespace network
 
     HttpResponse HttpResponse::make_text(StatusCode statusCode, std::string message)
     {
+        if (message == "")
+        {
+            return HttpResponse("HTTP/1.1", statusCode, getStatusMessage(statusCode));
+        }
+
         return HttpResponse("HTTP/1.1", statusCode, getStatusMessage(statusCode), boost::assign::map_list_of("Content-Type", "text/plain; charset=us-ascii"), message);
     }
     HttpResponse HttpResponse::make_allow_methods(StatusCode statusCode)
@@ -60,11 +62,11 @@ namespace network
         }
         else if (statusCode == StatusCode::NotFound)
         {
-            return "NotFound";
+            return "Not Found";
         }
         else if (statusCode == StatusCode::InternalServerError)
         {
-            return "InternalServerError";
+            return "Internal Server Error";
         }
 
         return "";
