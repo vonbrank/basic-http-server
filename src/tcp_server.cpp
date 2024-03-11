@@ -8,6 +8,7 @@
 #include <vector>
 #include <winsock2.h>
 #include <sstream>
+#include <thread>
 
 namespace network
 {
@@ -96,7 +97,11 @@ namespace network
             }
             else
             {
-                handleConnection(client_socket);
+                std::thread([this, client_socket]()
+                            { 
+                                auto thread_socket = client_socket; 
+                                handleConnection(thread_socket); })
+                    .detach();
             }
         }
     }
