@@ -2,8 +2,6 @@
 #include "utils.h"
 #include <algorithm>
 #include <ostream>
-#include <psdk_inc/_ip_types.h>
-#include <psdk_inc/_socket_types.h>
 #include <string>
 #include <vector>
 #include <winsock2.h>

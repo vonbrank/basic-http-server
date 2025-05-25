@@ -121,7 +121,7 @@ namespace network
 
     std::string HttpServer::readBytesFromSocket(SOCKET &handling_socket, size_t numBytes)
     {
-        size_t BUFFER_SIZE = 1024;
+        constexpr size_t BUFFER_SIZE = 1024;
         char buffer[BUFFER_SIZE];
         size_t totalBytesRead = 0;
         std::ostringstream ss_data;
